@@ -5,6 +5,8 @@ import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
 import VideoGallery from "@/components/VideoGallery";
 import PhotoGallery from "@/components/PhotoGallery";
+import FAQ from "@/components/FAQ";
+import Motivation from "@/components/Motivation";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
@@ -16,6 +18,7 @@ const Index = () => {
         <div id="home">
           <Hero />
         </div>
+        <Motivation />
         <div id="about">
           <About />
         </div>
@@ -27,6 +30,7 @@ const Index = () => {
           <VideoGallery />
           <PhotoGallery />
         </div>
+        <FAQ />
         <div id="contact">
           <CTA />
         </div>

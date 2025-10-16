@@ -28,7 +28,7 @@ const CTA = () => {
               className="group bg-primary hover:bg-primary/90 text-lg px-8 py-6 glow"
               asChild
             >
-              <a href="mailto:leaveyourmark.contacto@gmail.com">
+              <a href="https://wa.me/351912345678" target="_blank" rel="noopener noreferrer">
                 <Mail className="mr-2" />
                 Contacte-nos
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />

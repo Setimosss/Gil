@@ -19,7 +19,7 @@ const Navbar = () => {
     { label: "Sobre", href: "#about" },
     { label: "Serviços", href: "#services" },
     { label: "Galeria", href: "#gallery" },
-    { label: "Contacto", href: "#contact" }
+    { label: "Contacto", href: "https://wa.me/351912345678", external: true }
   ];
 
   return (
@@ -41,6 +41,8 @@ const Navbar = () => {
                 key={item.label}
                 href={item.href}
                 className="text-foreground/80 hover:text-foreground transition-colors"
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
               >
                 {item.label}
               </a>
@@ -68,6 +70,8 @@ const Navbar = () => {
                 href={item.href}
                 className="block text-foreground/80 hover:text-foreground transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
               >
                 {item.label}
               </a>

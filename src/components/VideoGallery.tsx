@@ -38,11 +38,12 @@ const VideoGallery = () => {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {videos.map((video, index) => (
             <div
               key={index}
-              className="group relative aspect-video rounded-2xl overflow-hidden cursor-pointer hover-lift"
+              className="group relative rounded-2xl overflow-hidden cursor-pointer hover-lift"
+              style={{ aspectRatio: '9/16' }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
