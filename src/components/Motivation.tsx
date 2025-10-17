@@ -7,7 +7,7 @@ const Motivation = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto text-center animate-fade-in-up">
-          <p className="text-2xl md:text-4xl lg:text-5xl font-light leading-relaxed">
+          <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed">
             "Na <span className="text-primary font-semibold">Leave Your Mark</span>, 
             acreditamos que não basta existir, é necessário{" "}
             <span className="text-primary font-semibold">deixar uma marca</span>. 

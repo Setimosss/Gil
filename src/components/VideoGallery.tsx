@@ -56,6 +56,7 @@ const VideoGallery = () => {
                 <video
                   src={video.videoUrl}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  autoPlay
                   muted
                   loop
                   playsInline
