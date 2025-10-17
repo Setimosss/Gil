@@ -36,11 +36,11 @@ const FAQ = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="section-header text-center space-y-4 mb-16 animate-fade-in-up">
+        <div className="section-header space-y-4 mb-16 animate-fade-in-up">
           <h2 className="text-5xl md:text-6xl font-bold font-serif">
             Perguntas <span className="text-gradient">Frequentes</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl">
             Tire suas dúvidas sobre nossos serviços e processos
           </p>
         </div>
