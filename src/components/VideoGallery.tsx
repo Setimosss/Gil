@@ -1,6 +1,9 @@
 import { Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import nailsVideo from "@/assets/nails-video.mp4";
+import video2 from "@/assets/video-2.mp4";
+import video3 from "@/assets/video-3.mp4";
+import video4 from "@/assets/video-4.mp4";
 
 const VideoGallery = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -39,48 +42,33 @@ const VideoGallery = () => {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (playingIndex !== null) {
-        resetVideo(playingIndex);
-        if (pauseTimerRef.current) {
-          clearTimeout(pauseTimerRef.current);
-          pauseTimerRef.current = null;
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       if (pauseTimerRef.current) {
         clearTimeout(pauseTimerRef.current);
       }
     };
-  }, [playingIndex]);
+  }, []);
 
   const videos = [
     {
-      title: "Nails - Dançar",
+      title: "Nails",
       videoUrl: nailsVideo,
       isLocal: true
     },
     {
-      title: "Festas das Tunas",
-      thumbnail: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop",
-      videoUrl: "#",
-      isLocal: false
+      title: "Vídeo 2",
+      videoUrl: video2,
+      isLocal: true
     },
     {
-      title: "Torneio de Atletismo",
-      thumbnail: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&h=600&fit=crop",
-      videoUrl: "#",
-      isLocal: false
+      title: "Vídeo 3",
+      videoUrl: video3,
+      isLocal: true
     },
     {
-      title: "Evento Cultural",
-      thumbnail: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&h=600&fit=crop",
-      videoUrl: "#",
-      isLocal: false
+      title: "Vídeo 4",
+      videoUrl: video4,
+      isLocal: true
     }
   ];
 
@@ -103,25 +91,17 @@ const VideoGallery = () => {
               style={{ aspectRatio: '9/16' }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => video.isLocal && handleVideoClick(index)}
+              onClick={() => handleVideoClick(index)}
             >
-              {video.isLocal ? (
-                <video
-                  ref={(el) => (videoRefs.current[index] = el)}
-                  src={video.videoUrl}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-              ) : (
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              )}
+              <video
+                ref={(el) => (videoRefs.current[index] = el)}
+                src={video.videoUrl}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              />
               
               <div className={`absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent transition-opacity duration-300 ${
                 hoveredIndex === index || playingIndex === index ? 'opacity-90' : 'opacity-60'
