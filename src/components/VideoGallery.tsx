@@ -7,16 +7,20 @@ import video4 from "@/assets/video-4.mp4";
 
 const VideoGallery = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set());
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pauseTimerRefs = useRef<Map<number, NodeJS.Timeout>>(new Map());
 
   const resetVideo = (index: number) => {
     const video = videoRefs.current[index];
     if (video) {
       video.pause();
       video.currentTime = 0;
-      setPlayingIndex(null);
+      setPlayingVideos(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(index);
+        return newSet;
+      });
     }
   };
 
@@ -25,17 +29,28 @@ const VideoGallery = () => {
     if (video) {
       if (video.paused) {
         video.play();
-        setPlayingIndex(index);
-        if (pauseTimerRef.current) {
-          clearTimeout(pauseTimerRef.current);
-          pauseTimerRef.current = null;
+        setPlayingVideos(prev => new Set(prev).add(index));
+        
+        // Clear any existing pause timer for this video
+        const existingTimer = pauseTimerRefs.current.get(index);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+          pauseTimerRefs.current.delete(index);
         }
       } else {
         video.pause();
+        setPlayingVideos(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
+        
         // Start 5 second timer to reset
-        pauseTimerRef.current = setTimeout(() => {
+        const timer = setTimeout(() => {
           resetVideo(index);
+          pauseTimerRefs.current.delete(index);
         }, 5000);
+        pauseTimerRefs.current.set(index, timer);
       }
     }
   };
@@ -46,9 +61,9 @@ const VideoGallery = () => {
 
   useEffect(() => {
     return () => {
-      if (pauseTimerRef.current) {
-        clearTimeout(pauseTimerRef.current);
-      }
+      // Cleanup all timers
+      pauseTimerRefs.current.forEach(timer => clearTimeout(timer));
+      pauseTimerRefs.current.clear();
     };
   }, []);
 
@@ -106,10 +121,10 @@ const VideoGallery = () => {
               />
               
               <div className={`absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent transition-opacity duration-300 ${
-                hoveredIndex === index || playingIndex === index ? 'opacity-90' : 'opacity-60'
+                hoveredIndex === index || playingVideos.has(index) ? 'opacity-90' : 'opacity-60'
               }`} style={{ pointerEvents: 'none' }} />
 
-              {playingIndex !== index && (
+              {!playingVideos.has(index) && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4" style={{ pointerEvents: 'none' }}>
                   <div className={`w-20 h-20 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center transition-all duration-300 glow ${
                     hoveredIndex === index ? 'scale-110' : 'scale-100'

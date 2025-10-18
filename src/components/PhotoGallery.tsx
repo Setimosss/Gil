@@ -1,5 +1,10 @@
 import { useState } from "react";
 import kenpoImage from "@/assets/kenpo.jpg";
+import porto1 from "@/assets/porto1.jpeg";
+import porto2 from "@/assets/porto2.jpeg";
+import alb3 from "@/assets/alb3.jpg";
+import joao from "@/assets/joao.jpg";
+import naos from "@/assets/naos.jpg";
 
 const PhotoGallery = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -11,29 +16,29 @@ const PhotoGallery = () => {
       category: "Música"
     },
     {
-      title: "Capa Hip Hop",
-      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=800&fit=crop",
+      title: "Nesse Mundo",
+      image: porto1,
       category: "Música"
     },
     {
-      title: "Festival de Verão",
-      image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=800&fit=crop",
-      category: "Evento"
-    },
-    {
-      title: "Sessão de Estúdio",
-      image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&h=800&fit=crop",
+      title: "Vini Sabi",
+      image: porto2,
       category: "Música"
     },
     {
-      title: "Concerto ao Vivo",
-      image: "https://images.unsplash.com/photo-1501612780327-45045538702b?w=800&h=800&fit=crop",
-      category: "Evento"
+      title: "Kempo",
+      image: alb3,
+      category: "Desporto"
     },
     {
-      title: "Arte Visual",
-      image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&h=800&fit=crop",
+      title: "João Carreira",
+      image: joao,
       category: "Design"
+    },
+    {
+      title: "Nails",
+      image: naos,
+      category: "Beleza"
     }
   ];
 
