@@ -22,7 +22,7 @@ const Testimonials = () => {
     <section className="py-32 relative">
       <div className="container mx-auto px-4">
         <div className="section-header text-center space-y-4 mb-16 animate-fade-in-up">
-          <h2 className="text-5xl md:text-6xl font-bold">
+          <h2 className="text-5xl md:text-6xl font-bold font-heading">
             O Que Dizem <span className="text-gradient">Nossos Clientes</span>
           </h2>
         </div>

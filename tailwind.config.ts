@@ -128,6 +128,7 @@ export default {
       fontFamily: {
         sans: ["Montserrat", "sans-serif"],
         serif: ["Times New Roman", "serif"],
+        heading: ["El Messiri", "Montserrat", "sans-serif"],
       },
     },
   },

@@ -11,9 +11,9 @@ const PhotoGallery = () => {
 
   const photos = [
     {
-      title: "Álbum Indie Rock",
+      title: "Kempo",
       image: kenpoImage,
-      category: "Música"
+      category: "Desporto"
     },
     {
       title: "Nesse Mundo",
@@ -46,7 +46,7 @@ const PhotoGallery = () => {
     <section className="py-32 relative">
       <div className="container mx-auto px-4">
         <div className="section-header text-center space-y-4 mb-16 animate-fade-in-up">
-          <h2 className="text-5xl md:text-6xl font-bold">
+          <h2 className="text-5xl md:text-6xl font-bold font-heading">
             Nossa <span className="text-gradient">Galeria</span>
           </h2>
         </div>

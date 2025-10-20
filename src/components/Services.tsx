@@ -8,7 +8,7 @@ const Services = () => {
     {
       emoji: "📱",
       title: "Marketing Digital",
-      items: ["Criação de Vídeos Publicitários", "Gestão de Redes Sociais"]
+      items: ["Criação de Vídeos", "Gestão de Redes Sociais"]
     },
     {
       emoji: "📸",
@@ -26,7 +26,7 @@ const Services = () => {
     <section className="py-32 relative">
       <div className="container mx-auto px-4">
         <div className="section-header text-center space-y-4 mb-16 animate-fade-in-up">
-          <h2 className="text-5xl md:text-6xl font-bold">
+          <h2 className="text-5xl md:text-6xl font-bold font-heading">
             Nossos <span className="text-gradient">Serviços</span>
           </h2>
         </div>
