@@ -1,4 +1,4 @@
-import { Instagram, Mail } from "lucide-react";
+import { Instagram, Mail, Phone } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -37,9 +37,10 @@ const Footer = () => {
             <div className="flex flex-col space-y-3">
               <a 
                 href="tel:+351935442979"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                +351 935 442 979
+                <Phone size={18} />
+                <span>+351 935 442 979</span>
               </a>
               <a 
                 href="mailto:leaveyourmark.contacto@gmail.com"
