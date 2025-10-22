@@ -1,6 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-
 const Services = () => {
   const services = [
     {
@@ -55,22 +52,6 @@ const Services = () => {
               </ul>
             </div>
           ))}
-        </div>
-
-        <div className="text-center mt-16 animate-fade-in-up">
-          <p className="text-muted-foreground mb-6 text-lg">
-            Interessado nos nossos serviços?
-          </p>
-          <Button 
-            size="lg" 
-            className="group bg-primary hover:bg-primary/90 text-lg px-8 py-6 glow"
-            asChild
-          >
-            <a href="#contact">
-              Fale Connosco
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </a>
-          </Button>
         </div>
       </div>
     </section>
