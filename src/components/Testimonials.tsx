@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
+
 const Testimonials = () => {
   const testimonials = [
     {
@@ -43,6 +46,24 @@ const Testimonials = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="text-center mt-16 animate-fade-in-up">
+          <p className="text-muted-foreground mb-6 text-lg">
+            Pronto para deixar a sua marca?
+          </p>
+          <Button 
+            size="lg" 
+            className="group bg-primary hover:bg-primary/90 text-lg px-8 py-6 glow"
+            onClick={() => {
+              const phoneNumber = "351935442979";
+              const message = encodeURIComponent("Olá! Vi os testemunhos e gostaria de trabalhar convosco.");
+              window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+            }}
+          >
+            <MessageCircle className="mr-2" />
+            Contacte-nos no WhatsApp
+          </Button>
         </div>
       </div>
     </section>
