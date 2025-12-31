@@ -1,7 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Instagram } from "lucide-react";
+import { useState, useRef } from "react";
 
 const Hero = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const textRef = useRef<HTMLHeadingElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
+    if (textRef.current) {
+      const rect = textRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
       {/* Animated background with multiple layers */}
@@ -15,8 +29,23 @@ const Hero = () => {
         <div className="max-w-5xl mx-auto text-center">
           <div className="space-y-8 animate-fade-in-up">
             <div className="space-y-4">
-              <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold font-serif italic leading-tight">
-                <span className="block text-gradient">LEAVE YOUR MARK</span>
+              <h1 
+                ref={textRef}
+                onMouseMove={handleMouseMove}
+                className="text-6xl md:text-8xl lg:text-9xl font-bold font-serif italic leading-tight relative cursor-default select-none"
+              >
+                {/* Base text - muted color */}
+                <span className="block text-muted-foreground/30">LEAVE YOUR MARK</span>
+                {/* Revealed text - follows cursor with radial gradient mask */}
+                <span 
+                  className="block text-gradient absolute inset-0 pointer-events-none"
+                  style={{
+                    maskImage: `radial-gradient(circle 120px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 100%)`,
+                    WebkitMaskImage: `radial-gradient(circle 120px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 100%)`,
+                  }}
+                >
+                  LEAVE YOUR MARK
+                </span>
               </h1>
               <div className="h-1 w-32 mx-auto bg-gradient-to-r from-primary to-primary/50 rounded-full" />
             </div>
