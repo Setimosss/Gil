@@ -1,24 +1,46 @@
 const Services = () => {
   const services = [
     {
-      emoji: "🎬",
-      title: "Produção Audiovisual",
-      items: ["Gravação de Vídeos", "Edição do Vídeo"]
-    },
-    {
-      emoji: "📱",
-      title: "Marketing Digital",
-      items: ["Criação de Vídeos", "Gestão de Redes Sociais"]
-    },
-    {
-      emoji: "📸",
-      title: "Fotografia",
-      items: ["Sessões Fotográficas", "Fotografia de Eventos"]
+      emoji: "📈",
+      title: "Marketing",
+      items: [
+        "Consultadoria estratégica",
+        "Marketing de lançamentos musicais",
+        "Estratégia de Marketing e Posicionamento",
+        "Spots publicitários",
+        "Vídeos Promocionais"
+      ]
     },
     {
       emoji: "🎨",
       title: "Design",
-      items: ["Capas para Músicas", "Criação de Flyers"]
+      items: [
+        "Branding e Identidade Visual",
+        "Imagem Musical",
+        "Merchandising",
+        "Comunicação Visual"
+      ]
+    },
+    {
+      emoji: "🎬",
+      title: "Produção Audiovisual",
+      items: [
+        "Videoclipes e Visualizers",
+        "Produção de Spots e Anúncios",
+        "Direção Criativa",
+        "Conteúdo para as Redes Sociais",
+        "Cobertura de Eventos"
+      ]
+    },
+    {
+      emoji: "📸",
+      title: "Fotografia",
+      items: [
+        "Sessão Fotográfica",
+        "Fotografia de Evento",
+        "Fotografia Corporativa e Institucional",
+        "Fotografia Publicitária"
+      ]
     }
   ];
 

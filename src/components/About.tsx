@@ -15,12 +15,23 @@ const About = () => {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 animate-fade-in-up">
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Na <span className="font-bold text-primary">LEAVE YOUR MARK</span> ajudamos marcas e artistas 
-              a conquistarem relevância no mercado digital. Somos uma agência de marketing especializada em 
-              estratégia, design e produção audiovisual, focada em criar experiências que geram impacto e resultados.
+              Na <span className="font-bold text-primary">Leave Your Mark</span>, acreditamos que cada marca 
+              tem uma história que merece ser contada de forma autêntica, estratégica e memorável.
             </p>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Mais do que comunicar, fazemos a tua marca destacar-se, crescer e deixar a sua marca.
+              Somos uma agência de marketing e produção audiovisual que transforma ideias em experiências 
+              visuais e estratégias que geram impacto, crescimento e relevância no mercado digital.
+            </p>
+            <p className="text-xl text-muted-foreground leading-relaxed">
+              Trabalhamos com artistas, marcas, empresas e negócios locais que procuram destacar-se num 
+              mercado cada vez mais competitivo.
+            </p>
+            <p className="text-xl text-muted-foreground leading-relaxed">
+              Combinamos estratégia, design e produção audiovisual para construir presenças fortes, 
+              identidades marcantes e resultados consistentes.
+            </p>
+            <p className="text-xl text-muted-foreground leading-relaxed font-semibold">
+              Mais do que comunicar, ajudamos-te a deixar a tua marca.
             </p>
           </div>
 

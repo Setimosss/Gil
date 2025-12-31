@@ -1,7 +1,7 @@
 import { useState } from "react";
 import kenpoImage from "@/assets/kenpo.jpg";
 import porto1 from "@/assets/porto1.jpeg";
-import porto2 from "@/assets/porto2.jpeg";
+import amiKenha from "@/assets/ami-kenha.jpeg";
 import alb3 from "@/assets/alb3.jpg";
 import joao from "@/assets/joao.jpg";
 import naos from "@/assets/naos.jpg";
@@ -21,8 +21,8 @@ const PhotoGallery = () => {
       category: "Música"
     },
     {
-      title: "Vini Sabi",
-      image: porto2,
+      title: "Ami e Kenha",
+      image: amiKenha,
       category: "Música"
     },
     {
