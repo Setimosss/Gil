@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 
 const Testimonials = () => {
   const testimonials = [
@@ -24,47 +25,49 @@ const Testimonials = () => {
   return (
     <section className="py-32 relative">
       <div className="container mx-auto px-4">
-        <div className="section-header text-center space-y-4 mb-16 animate-fade-in-up">
-          <h2 className="text-5xl md:text-6xl font-bold font-heading">
-            O Que Dizem <span className="text-gradient">Nossos Clientes</span>
-          </h2>
-        </div>
+        <ScrollReveal direction="up">
+          <div className="section-header text-center space-y-4 mb-16">
+            <h2 className="text-5xl md:text-6xl font-bold font-heading">
+              O Que Dizem <span className="text-gradient">Nossos Clientes</span>
+            </h2>
+          </div>
+        </ScrollReveal>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="card-glass p-8 rounded-2xl hover-lift space-y-6"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="text-primary text-4xl">"</div>
-              <p className="text-muted-foreground leading-relaxed italic">
-                {testimonial.text}
-              </p>
-              <div className="border-t border-primary/20 pt-4">
-                <p className="font-bold text-primary">{testimonial.name}</p>
+            <StaggerItem key={index}>
+              <div className="card-glass p-8 rounded-2xl hover-lift space-y-6 h-full">
+                <div className="text-primary text-4xl">"</div>
+                <p className="text-muted-foreground leading-relaxed italic">
+                  {testimonial.text}
+                </p>
+                <div className="border-t border-primary/20 pt-4">
+                  <p className="font-bold text-primary">{testimonial.name}</p>
+                </div>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
-        <div className="text-center mt-16 animate-fade-in-up">
-          <p className="text-muted-foreground mb-6 text-lg">
-            Pronto para deixar a sua marca?
-          </p>
-          <Button 
-            size="lg" 
-            className="group bg-primary hover:bg-primary/90 text-lg px-8 py-6 glow"
-            onClick={() => {
-              const phoneNumber = "351935442979";
-              const message = encodeURIComponent("Olá! Vi os testemunhos e gostaria de trabalhar convosco.");
-              window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
-            }}
-          >
-            <MessageCircle className="mr-2" />
-            Contacte-nos no WhatsApp
-          </Button>
-        </div>
+        <ScrollReveal direction="up" delay={0.5}>
+          <div className="text-center mt-16">
+            <p className="text-muted-foreground mb-6 text-lg">
+              Pronto para deixar a sua marca?
+            </p>
+            <Button 
+              size="lg" 
+              className="group bg-primary hover:bg-primary/90 text-lg px-8 py-6 glow"
+              onClick={() => {
+                const phoneNumber = "351935442979";
+                const message = encodeURIComponent("Olá! Vi os testemunhos e gostaria de trabalhar convosco.");
+                window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+              }}
+            >
+              <MessageCircle className="mr-2" />
+              Contacte-nos no WhatsApp
+            </Button>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

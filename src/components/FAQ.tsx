@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "./ScrollAnimations";
 
 const FAQ = () => {
   const faqs = [
@@ -32,32 +33,37 @@ const FAQ = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="section-header text-center space-y-4 mb-16 animate-fade-in-up">
-          <h2 className="text-5xl md:text-6xl font-bold font-heading">
-            Perguntas <span className="text-gradient">Frequentes</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Tire suas dúvidas sobre nossos serviços e processos
-          </p>
-        </div>
+        <ScrollReveal direction="up">
+          <div className="section-header text-center space-y-4 mb-16">
+            <h2 className="text-5xl md:text-6xl font-bold font-heading">
+              Perguntas <span className="text-gradient">Frequentes</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Tire suas dúvidas sobre nossos serviços e processos
+            </p>
+          </div>
+        </ScrollReveal>
 
         <div className="max-w-4xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-6">
-            {faqs.map((faq, index) => (
-              <AccordionItem 
-                key={index} 
-                value={`item-${index}`}
-                className="card-glass rounded-2xl px-8 py-2 border border-primary/20 hover:border-primary/40 transition-all duration-300"
-              >
-                <AccordionTrigger className="text-left text-lg md:text-xl font-semibold hover:text-primary transition-colors py-6">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-base md:text-lg pt-2 pb-6 leading-relaxed">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <StaggerContainer staggerDelay={0.12}>
+            <Accordion type="single" collapsible className="space-y-6">
+              {faqs.map((faq, index) => (
+                <StaggerItem key={index}>
+                  <AccordionItem 
+                    value={`item-${index}`}
+                    className="card-glass rounded-2xl px-8 py-2 border border-primary/20 hover:border-primary/40 transition-all duration-300"
+                  >
+                    <AccordionTrigger className="text-left text-lg md:text-xl font-semibold hover:text-primary transition-colors py-6">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-base md:text-lg pt-2 pb-6 leading-relaxed">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </StaggerItem>
+              ))}
+            </Accordion>
+          </StaggerContainer>
         </div>
       </div>
     </section>
