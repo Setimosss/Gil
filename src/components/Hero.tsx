@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Instagram } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isPulled, setIsPulled] = useState(false);
+  const [pullProgress, setPullProgress] = useState(0);
   const textRef = useRef<HTMLHeadingElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const cordRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startY = useRef(0);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
     if (textRef.current) {
@@ -18,23 +21,57 @@ const Hero = () => {
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const scrollY = window.scrollY;
-        const sectionHeight = sectionRef.current.offsetHeight;
-        // Calculate progress from 0 to 1 as user scrolls through the hero section
-        const progress = Math.min(scrollY / (sectionHeight * 0.5), 1);
-        setScrollProgress(progress);
-      }
-    };
+  const handleCordMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    isDragging.current = true;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    startY.current = clientY;
+    e.preventDefault();
+  };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const handleCordMouseMove = (e: MouseEvent | TouchEvent) => {
+    if (!isDragging.current) return;
+    
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const deltaY = clientY - startY.current;
+    const progress = Math.min(Math.max(deltaY / 100, 0), 1);
+    setPullProgress(progress);
+    
+    if (progress >= 1 && !isPulled) {
+      setIsPulled(true);
+    }
+  };
+
+  const handleCordMouseUp = () => {
+    isDragging.current = false;
+    if (pullProgress < 1) {
+      setPullProgress(0);
+    }
+  };
+
+  // Add global mouse/touch event listeners
+  useState(() => {
+    const handleMouseMoveGlobal = (e: MouseEvent) => handleCordMouseMove(e);
+    const handleTouchMoveGlobal = (e: TouchEvent) => handleCordMouseMove(e);
+    const handleMouseUpGlobal = () => handleCordMouseUp();
+    const handleTouchEndGlobal = () => handleCordMouseUp();
+
+    window.addEventListener('mousemove', handleMouseMoveGlobal);
+    window.addEventListener('touchmove', handleTouchMoveGlobal);
+    window.addEventListener('mouseup', handleMouseUpGlobal);
+    window.addEventListener('touchend', handleTouchEndGlobal);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMoveGlobal);
+      window.removeEventListener('touchmove', handleTouchMoveGlobal);
+      window.removeEventListener('mouseup', handleMouseUpGlobal);
+      window.removeEventListener('touchend', handleTouchEndGlobal);
+    };
+  });
+
+  const lightIntensity = isPulled ? 1 : pullProgress;
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
       {/* Animated background with multiple layers */}
       <div className="absolute inset-0">
         <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-primary/15 rounded-full blur-3xl animate-pulse" />
@@ -63,13 +100,13 @@ const Hero = () => {
                 >
                   LEAVE YOUR MARK
                 </span>
-                {/* Scroll-activated glow layer */}
+                {/* Light switch activated glow layer */}
                 <span 
-                  className="block text-gradient absolute inset-0 pointer-events-none transition-all duration-300"
+                  className="block text-gradient absolute inset-0 pointer-events-none transition-all duration-500"
                   style={{
-                    opacity: scrollProgress,
-                    textShadow: `0 0 ${20 + scrollProgress * 40}px hsl(var(--primary)), 0 0 ${40 + scrollProgress * 80}px hsl(var(--primary) / 0.6), 0 0 ${60 + scrollProgress * 100}px hsl(var(--primary) / 0.4)`,
-                    filter: `brightness(${1 + scrollProgress * 0.5})`,
+                    opacity: lightIntensity,
+                    textShadow: `0 0 ${20 + lightIntensity * 40}px hsl(var(--primary)), 0 0 ${40 + lightIntensity * 80}px hsl(var(--primary) / 0.6), 0 0 ${60 + lightIntensity * 100}px hsl(var(--primary) / 0.4)`,
+                    filter: `brightness(${1 + lightIntensity * 0.5})`,
                   }}
                 >
                   LEAVE YOUR MARK
@@ -103,65 +140,63 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Pull cord / Light switch string */}
-      <div className="absolute right-8 md:right-16 top-0 h-full flex flex-col items-center pointer-events-none z-20">
-        {/* The cord line that extends as you scroll */}
+      {/* Pull cord / Light switch string - Interactive */}
+      <div 
+        ref={cordRef}
+        className="absolute right-8 md:right-16 top-0 flex flex-col items-center z-20 cursor-grab active:cursor-grabbing"
+        style={{ height: `${25 + pullProgress * 30}%` }}
+        onMouseDown={handleCordMouseDown}
+        onTouchStart={handleCordMouseDown}
+      >
+        {/* The cord line */}
         <div 
-          className="w-[2px] transition-all duration-100 ease-out"
+          className="w-[2px] h-full transition-all duration-100 ease-out"
           style={{
-            height: `${20 + scrollProgress * 35}%`,
-            background: `linear-gradient(to bottom, transparent 0%, hsl(var(--primary) / ${0.3 + scrollProgress * 0.7}) 30%, hsl(var(--primary)) 100%)`,
-            boxShadow: scrollProgress > 0.5 ? `0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary) / 0.5)` : 'none',
+            background: `linear-gradient(to bottom, transparent 0%, hsl(var(--primary) / ${0.3 + lightIntensity * 0.7}) 30%, hsl(var(--primary)) 100%)`,
+            boxShadow: lightIntensity > 0.5 ? `0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary) / 0.5)` : 'none',
           }}
         />
         {/* The pull handle / bulb */}
         <div 
           className="relative transition-all duration-300"
-          style={{
-            transform: `translateY(${scrollProgress * 20}px)`,
-          }}
         >
           {/* Glow behind the bulb */}
           <div 
             className="absolute inset-0 rounded-full blur-md transition-opacity duration-300"
             style={{
               background: `hsl(var(--primary))`,
-              opacity: scrollProgress * 0.8,
+              opacity: lightIntensity * 0.8,
               transform: 'scale(2)',
             }}
           />
           {/* The bulb/handle */}
           <div 
-            className="w-4 h-4 rounded-full border-2 relative transition-all duration-300"
+            className="w-5 h-5 rounded-full border-2 relative transition-all duration-300"
             style={{
-              borderColor: `hsl(var(--primary) / ${0.5 + scrollProgress * 0.5})`,
-              background: scrollProgress > 0.8 
+              borderColor: `hsl(var(--primary) / ${0.5 + lightIntensity * 0.5})`,
+              background: isPulled 
                 ? `hsl(var(--primary))` 
-                : `hsl(var(--primary) / ${scrollProgress * 0.5})`,
-              boxShadow: scrollProgress > 0.5 
-                ? `0 0 ${10 + scrollProgress * 20}px hsl(var(--primary)), 0 0 ${20 + scrollProgress * 30}px hsl(var(--primary) / 0.6)` 
+                : `hsl(var(--primary) / ${lightIntensity * 0.5})`,
+              boxShadow: lightIntensity > 0.5 
+                ? `0 0 ${10 + lightIntensity * 20}px hsl(var(--primary)), 0 0 ${20 + lightIntensity * 30}px hsl(var(--primary) / 0.6)` 
                 : 'none',
             }}
           />
         </div>
         {/* Small hint text */}
         <span 
-          className="text-[10px] text-muted-foreground/50 mt-2 writing-mode-vertical transition-opacity duration-500"
+          className="text-[10px] text-muted-foreground/50 mt-3 transition-opacity duration-500 select-none"
           style={{
-            writingMode: 'vertical-rl',
-            opacity: 1 - scrollProgress,
+            opacity: isPulled ? 0 : 1 - pullProgress,
           }}
         >
-          scroll
+          puxa ↓
         </span>
       </div>
 
       {/* Scroll indicator */}
-      <div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-300"
-        style={{ opacity: 1 - scrollProgress }}
-      >
-        <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2">
           <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
         </div>
       </div>
