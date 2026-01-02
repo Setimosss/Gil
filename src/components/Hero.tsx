@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Instagram } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [scrollProgress, setScrollProgress] = useState(0);
   const textRef = useRef<HTMLHeadingElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
     if (textRef.current) {
@@ -16,8 +18,23 @@ const Hero = () => {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const scrollY = window.scrollY;
+        const sectionHeight = sectionRef.current.offsetHeight;
+        // Calculate progress from 0 to 1 as user scrolls through the hero section
+        const progress = Math.min(scrollY / (sectionHeight * 0.5), 1);
+        setScrollProgress(progress);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
       {/* Animated background with multiple layers */}
       <div className="absolute inset-0">
         <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-primary/15 rounded-full blur-3xl animate-pulse" />
@@ -42,6 +59,17 @@ const Hero = () => {
                   style={{
                     maskImage: `radial-gradient(circle 120px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 100%)`,
                     WebkitMaskImage: `radial-gradient(circle 120px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 100%)`,
+                  }}
+                >
+                  LEAVE YOUR MARK
+                </span>
+                {/* Scroll-activated glow layer */}
+                <span 
+                  className="block text-gradient absolute inset-0 pointer-events-none transition-all duration-300"
+                  style={{
+                    opacity: scrollProgress,
+                    textShadow: `0 0 ${20 + scrollProgress * 40}px hsl(var(--primary)), 0 0 ${40 + scrollProgress * 80}px hsl(var(--primary) / 0.6), 0 0 ${60 + scrollProgress * 100}px hsl(var(--primary) / 0.4)`,
+                    filter: `brightness(${1 + scrollProgress * 0.5})`,
                   }}
                 >
                   LEAVE YOUR MARK
