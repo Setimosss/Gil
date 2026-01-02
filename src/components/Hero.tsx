@@ -32,7 +32,7 @@ const Hero = () => {
               <h1 
                 ref={textRef}
                 onMouseMove={handleMouseMove}
-                className="text-6xl md:text-8xl lg:text-9xl font-bold font-serif italic leading-tight relative cursor-default select-none"
+                className="text-6xl md:text-8xl lg:text-9xl font-semibold font-serif italic leading-tight relative cursor-default select-none"
               >
                 {/* Base text - muted color */}
                 <span className="block text-muted-foreground/30">LEAVE YOUR MARK</span>
