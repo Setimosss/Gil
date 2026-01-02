@@ -103,9 +103,65 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* Pull cord / Light switch string */}
+      <div className="absolute right-8 md:right-16 top-0 h-full flex flex-col items-center pointer-events-none z-20">
+        {/* The cord line that extends as you scroll */}
+        <div 
+          className="w-[2px] transition-all duration-100 ease-out"
+          style={{
+            height: `${20 + scrollProgress * 35}%`,
+            background: `linear-gradient(to bottom, transparent 0%, hsl(var(--primary) / ${0.3 + scrollProgress * 0.7}) 30%, hsl(var(--primary)) 100%)`,
+            boxShadow: scrollProgress > 0.5 ? `0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary) / 0.5)` : 'none',
+          }}
+        />
+        {/* The pull handle / bulb */}
+        <div 
+          className="relative transition-all duration-300"
+          style={{
+            transform: `translateY(${scrollProgress * 20}px)`,
+          }}
+        >
+          {/* Glow behind the bulb */}
+          <div 
+            className="absolute inset-0 rounded-full blur-md transition-opacity duration-300"
+            style={{
+              background: `hsl(var(--primary))`,
+              opacity: scrollProgress * 0.8,
+              transform: 'scale(2)',
+            }}
+          />
+          {/* The bulb/handle */}
+          <div 
+            className="w-4 h-4 rounded-full border-2 relative transition-all duration-300"
+            style={{
+              borderColor: `hsl(var(--primary) / ${0.5 + scrollProgress * 0.5})`,
+              background: scrollProgress > 0.8 
+                ? `hsl(var(--primary))` 
+                : `hsl(var(--primary) / ${scrollProgress * 0.5})`,
+              boxShadow: scrollProgress > 0.5 
+                ? `0 0 ${10 + scrollProgress * 20}px hsl(var(--primary)), 0 0 ${20 + scrollProgress * 30}px hsl(var(--primary) / 0.6)` 
+                : 'none',
+            }}
+          />
+        </div>
+        {/* Small hint text */}
+        <span 
+          className="text-[10px] text-muted-foreground/50 mt-2 writing-mode-vertical transition-opacity duration-500"
+          style={{
+            writingMode: 'vertical-rl',
+            opacity: 1 - scrollProgress,
+          }}
+        >
+          scroll
+        </span>
+      </div>
+
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2">
+      <div 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-300"
+        style={{ opacity: 1 - scrollProgress }}
+      >
+        <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2 animate-bounce">
           <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
         </div>
       </div>
