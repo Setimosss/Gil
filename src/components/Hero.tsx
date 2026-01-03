@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Instagram } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isLightOn, setIsLightOn] = useState(false);
-  const [cordWave, setCordWave] = useState<{x: number, y: number}[]>([]);
+  const [pullY, setPullY] = useState(0);
+  const [waveOffset, setWaveOffset] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
   const textRef = useRef<HTMLHeadingElement>(null);
-  const cordContainerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startY = useRef(0);
+  const hasToggled = useRef(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
     if (textRef.current) {
@@ -19,65 +23,86 @@ const Hero = () => {
     }
   };
 
-  // Handle cord hover for wave effect
-  const handleCordHover = (e: React.MouseEvent) => {
-    if (cordContainerRef.current) {
-      const rect = cordContainerRef.current.getBoundingClientRect();
-      const y = e.clientY - rect.top;
-      const x = e.clientX - rect.left;
-      
-      setCordWave(prev => {
-        const newWave = [...prev, { x: x - rect.width / 2, y }];
-        // Keep only last 5 wave points
-        return newWave.slice(-5);
-      });
-    }
+  // Smooth wave animation when hovering
+  useEffect(() => {
+    if (!isHovering && !isDragging.current) return;
+    
+    const animate = () => {
+      setWaveOffset(prev => prev + 0.15);
+    };
+    
+    const interval = setInterval(animate, 16);
+    return () => clearInterval(interval);
+  }, [isHovering]);
+
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    isDragging.current = true;
+    hasToggled.current = false;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    startY.current = clientY - pullY;
+    e.preventDefault();
   };
 
-  // Decay waves over time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCordWave(prev => prev.slice(1));
-    }, 200);
-    return () => clearInterval(interval);
+  const handleDragMove = useCallback((e: MouseEvent | TouchEvent) => {
+    if (!isDragging.current) return;
+    
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const newPullY = Math.max(0, Math.min(80, clientY - startY.current));
+    setPullY(newPullY);
+    
+    // Toggle when pulled past threshold
+    if (newPullY >= 70 && !hasToggled.current) {
+      hasToggled.current = true;
+      setIsLightOn(prev => !prev);
+    }
   }, []);
 
-  // Toggle light on click
-  const handleCordClick = () => {
-    setIsLightOn(prev => !prev);
-  };
+  const handleDragEnd = useCallback(() => {
+    isDragging.current = false;
+    // Animate back smoothly
+    setPullY(0);
+  }, []);
 
-  // Generate wavy path
-  const generateWavyPath = () => {
-    const height = 180;
-    const segments = 20;
-    const segmentHeight = height / segments;
+  useEffect(() => {
+    window.addEventListener('mousemove', handleDragMove);
+    window.addEventListener('touchmove', handleDragMove);
+    window.addEventListener('mouseup', handleDragEnd);
+    window.addEventListener('touchend', handleDragEnd);
+
+    return () => {
+      window.removeEventListener('mousemove', handleDragMove);
+      window.removeEventListener('touchmove', handleDragMove);
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchend', handleDragEnd);
+    };
+  }, [handleDragMove, handleDragEnd]);
+
+  // Generate smooth cubic bezier path for the cord
+  const generateSmoothPath = () => {
+    const baseHeight = 160 + pullY;
+    const waveAmplitude = isHovering || isDragging.current ? 8 : 3;
     
-    let path = `M 15 0`;
+    // Control points for smooth cubic bezier curve
+    const wave1 = Math.sin(waveOffset) * waveAmplitude;
+    const wave2 = Math.sin(waveOffset + 1.5) * waveAmplitude;
+    const wave3 = Math.sin(waveOffset + 3) * waveAmplitude;
+    const wave4 = Math.sin(waveOffset + 4.5) * waveAmplitude;
     
-    for (let i = 0; i <= segments; i++) {
-      const y = i * segmentHeight;
-      
-      // Check if there's a wave near this point
-      const wave = cordWave.find(w => Math.abs(w.y - y) < 30);
-      const waveOffset = wave ? (wave.x * 0.3) * Math.cos((y - wave.y) * 0.2) : 0;
-      
-      // Base gentle wave
-      const baseWave = Math.sin(i * 0.8 + Date.now() * 0.002) * 2;
-      
-      const x = 15 + baseWave + waveOffset;
-      
-      if (i === 0) {
-        path = `M ${x} ${y}`;
-      } else {
-        path += ` Q ${x + Math.sin(i) * 3} ${y - segmentHeight / 2}, ${x} ${y}`;
-      }
-    }
-    
-    return path;
+    // Smooth cubic bezier path
+    return `
+      M 20 0
+      C ${20 + wave1} ${baseHeight * 0.2}, 
+        ${20 + wave2} ${baseHeight * 0.35}, 
+        ${20 + wave2 * 0.8} ${baseHeight * 0.45}
+      S ${20 + wave3} ${baseHeight * 0.7}, 
+        ${20 + wave3 * 0.5} ${baseHeight * 0.8}
+      S ${20 + wave4 * 0.3} ${baseHeight * 0.95}, 
+        20 ${baseHeight}
+    `;
   };
 
   const lightIntensity = isLightOn ? 1 : 0;
+  const cordHeight = 200 + pullY;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
@@ -149,72 +174,81 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Pull cord / Light switch string - Wavy Interactive */}
+      {/* Pull cord - Smooth fluid rope */}
       <div 
-        ref={cordContainerRef}
-        className="absolute right-8 md:right-16 top-0 z-20 cursor-pointer select-none"
-        style={{ width: '30px', height: '220px' }}
-        onMouseMove={handleCordHover}
-        onClick={handleCordClick}
+        className="absolute right-8 md:right-16 top-0 z-20 select-none"
+        style={{ width: '40px', height: `${cordHeight}px` }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => !isDragging.current && setIsHovering(false)}
       >
-        {/* SVG Wavy Cord */}
         <svg 
-          width="30" 
-          height="180" 
+          width="40" 
+          height={cordHeight}
           className="overflow-visible"
-          style={{ filter: isLightOn ? `drop-shadow(0 0 8px hsl(var(--primary)))` : 'none' }}
+          style={{ 
+            filter: isLightOn ? `drop-shadow(0 0 6px hsl(var(--primary)))` : 'none',
+            transition: 'filter 0.5s ease'
+          }}
         >
           <defs>
-            <linearGradient id="cordGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient id="ropeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="transparent" />
-              <stop offset="30%" stopColor={isLightOn ? "hsl(var(--primary))" : "hsl(var(--muted-foreground) / 0.4)"} />
-              <stop offset="100%" stopColor={isLightOn ? "hsl(var(--primary))" : "hsl(var(--muted-foreground) / 0.6)"} />
+              <stop offset="15%" stopColor={isLightOn ? "hsl(262, 83%, 58%)" : "hsl(0, 0%, 50%)"} stopOpacity="0.6" />
+              <stop offset="100%" stopColor={isLightOn ? "hsl(262, 83%, 58%)" : "hsl(0, 0%, 60%)"} />
             </linearGradient>
           </defs>
           <path 
-            d={generateWavyPath()}
+            d={generateSmoothPath()}
             fill="none"
-            stroke="url(#cordGradient)"
-            strokeWidth="2"
+            stroke="url(#ropeGradient)"
+            strokeWidth="2.5"
             strokeLinecap="round"
-            className="transition-all duration-150"
+            strokeLinejoin="round"
+            style={{ transition: 'stroke-width 0.2s ease' }}
           />
         </svg>
         
-        {/* The pull handle / bulb */}
+        {/* Pull handle */}
         <div 
-          className="relative flex flex-col items-center"
-          style={{ marginTop: '-2px', marginLeft: '4px' }}
+          className="absolute cursor-grab active:cursor-grabbing"
+          style={{ 
+            left: '50%', 
+            transform: 'translateX(-50%)',
+            top: `${160 + pullY - 10}px`,
+            transition: pullY === 0 ? 'top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'none'
+          }}
+          onMouseDown={handleDragStart}
+          onTouchStart={handleDragStart}
         >
-          {/* Glow behind the bulb */}
+          {/* Glow */}
           <div 
-            className="absolute rounded-full blur-md transition-all duration-500"
+            className="absolute inset-0 rounded-full blur-lg transition-all duration-500"
             style={{
-              width: '20px',
-              height: '20px',
+              width: '24px',
+              height: '24px',
               background: `hsl(var(--primary))`,
-              opacity: isLightOn ? 0.8 : 0,
-              transform: 'scale(2)',
+              opacity: isLightOn ? 0.7 : 0,
+              transform: 'translate(-2px, -2px) scale(1.5)',
             }}
           />
-          {/* The bulb/handle */}
+          {/* Handle ball */}
           <div 
-            className="w-5 h-5 rounded-full border-2 relative transition-all duration-300 hover:scale-110"
+            className="w-5 h-5 rounded-full transition-all duration-300 hover:scale-125"
             style={{
-              borderColor: isLightOn ? `hsl(var(--primary))` : `hsl(var(--muted-foreground) / 0.5)`,
               background: isLightOn 
-                ? `hsl(var(--primary))` 
-                : `hsl(var(--muted-foreground) / 0.2)`,
+                ? `radial-gradient(circle at 30% 30%, hsl(262, 83%, 70%), hsl(262, 83%, 50%))` 
+                : `radial-gradient(circle at 30% 30%, hsl(0, 0%, 70%), hsl(0, 0%, 45%))`,
               boxShadow: isLightOn 
-                ? `0 0 20px hsl(var(--primary)), 0 0 40px hsl(var(--primary) / 0.6)` 
-                : 'none',
+                ? `0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.3)` 
+                : `0 2px 4px rgba(0,0,0,0.3)`,
             }}
           />
-          {/* Small hint text */}
+          {/* Hint */}
           <span 
-            className="text-[10px] text-muted-foreground/50 mt-3 transition-opacity duration-500 whitespace-nowrap"
+            className="absolute left-1/2 -translate-x-1/2 mt-2 text-[10px] text-muted-foreground/60 whitespace-nowrap transition-opacity duration-300"
+            style={{ opacity: pullY > 10 ? 0 : 1 }}
           >
-            {isLightOn ? 'clica ↑' : 'clica ↓'}
+            puxa ↓
           </span>
         </div>
       </div>
