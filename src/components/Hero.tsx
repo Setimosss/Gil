@@ -6,9 +6,9 @@ const Hero = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isLightOn, setIsLightOn] = useState(false);
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
+  const [waveOffset, setWaveOffset] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const textRef = useRef<HTMLHeadingElement>(null);
-  const cordContainerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startPos = useRef({ x: 0, y: 0 });
   const hasToggled = useRef(false);
@@ -22,6 +22,18 @@ const Hero = () => {
       });
     }
   };
+
+  // Smooth wave animation when hovering
+  useEffect(() => {
+    if (!isHovering && !isDragging.current) return;
+    
+    const animate = () => {
+      setWaveOffset(prev => prev + 0.15);
+    };
+    
+    const interval = setInterval(animate, 16);
+    return () => clearInterval(interval);
+  }, [isHovering]);
 
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
     isDragging.current = true;
@@ -38,14 +50,14 @@ const Hero = () => {
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     
-    // Allow free movement in X (-60 to 60) and Y (0 to 100)
-    const newX = Math.max(-60, Math.min(60, clientX - startPos.current.x));
-    const newY = Math.max(0, Math.min(100, clientY - startPos.current.y));
+    // Allow free movement in X (-50 to 50) and Y (0 to 80)
+    const newX = Math.max(-50, Math.min(50, clientX - startPos.current.x));
+    const newY = Math.max(0, Math.min(80, clientY - startPos.current.y));
     
     setDragPos({ x: newX, y: newY });
     
     // Toggle when pulled down past threshold
-    if (newY >= 80 && !hasToggled.current) {
+    if (newY >= 70 && !hasToggled.current) {
       hasToggled.current = true;
       setIsLightOn(prev => !prev);
     }
@@ -53,7 +65,6 @@ const Hero = () => {
 
   const handleDragEnd = useCallback(() => {
     isDragging.current = false;
-    // Animate back to center smoothly
     setDragPos({ x: 0, y: 0 });
   }, []);
 
@@ -71,37 +82,33 @@ const Hero = () => {
     };
   }, [handleDragMove, handleDragEnd]);
 
-  // Generate fluid path that follows the handle position
-  const generateFluidPath = () => {
-    const baseHeight = 160;
-    const endX = 20 + dragPos.x;
-    const endY = baseHeight + dragPos.y;
+  // Generate smooth wavy path that also follows drag position
+  const generateWavyPath = () => {
+    const baseHeight = 160 + dragPos.y;
+    const waveAmplitude = isHovering || isDragging.current ? 6 : 2;
     
-    // Create smooth curve from top to handle position
-    // The cord should curve naturally based on handle position
-    const tension = 0.4;
-    const midY = endY * 0.5;
+    // Wave based on time + drag influence
+    const wave1 = Math.sin(waveOffset) * waveAmplitude + dragPos.x * 0.15;
+    const wave2 = Math.sin(waveOffset + 1.5) * waveAmplitude + dragPos.x * 0.35;
+    const wave3 = Math.sin(waveOffset + 3) * waveAmplitude + dragPos.x * 0.6;
+    const wave4 = Math.sin(waveOffset + 4.5) * waveAmplitude + dragPos.x * 0.85;
     
-    // Control points create a natural hanging rope effect
-    const cp1x = 20 + dragPos.x * 0.2;
-    const cp1y = endY * 0.25;
-    const cp2x = 20 + dragPos.x * 0.5;
-    const cp2y = endY * 0.5;
-    const cp3x = endX - dragPos.x * 0.1;
-    const cp3y = endY * 0.75;
+    const endX = 15 + dragPos.x;
     
     return `
-      M 20 0
-      C ${cp1x} ${cp1y}, 
-        ${cp2x} ${cp2y}, 
-        ${20 + dragPos.x * 0.6} ${midY}
-      S ${cp3x} ${cp3y}, 
-        ${endX} ${endY}
+      M 15 0
+      C ${15 + wave1} ${baseHeight * 0.25}, 
+        ${15 + wave2} ${baseHeight * 0.4}, 
+        ${15 + wave2 * 0.9} ${baseHeight * 0.5}
+      S ${15 + wave3} ${baseHeight * 0.7}, 
+        ${15 + wave3 * 0.8} ${baseHeight * 0.8}
+      S ${15 + wave4 * 0.5} ${baseHeight * 0.95}, 
+        ${endX} ${baseHeight}
     `;
   };
 
   const lightIntensity = isLightOn ? 1 : 0;
-  const cordHeight = 280 + dragPos.y;
+  const cordHeight = 200 + dragPos.y;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
@@ -173,57 +180,53 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Pull cord - Fluid interactive rope */}
+      {/* Pull cord - Wavy interactive rope */}
       <div 
-        ref={cordContainerRef}
-        className="absolute right-8 md:right-16 top-0 z-20 select-none pointer-events-none"
-        style={{ width: '140px', height: `${cordHeight}px`, marginLeft: '-50px' }}
+        className="absolute right-8 md:right-16 top-0 z-20 select-none"
+        style={{ width: '30px', height: `${cordHeight}px` }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => !isDragging.current && setIsHovering(false)}
       >
         <svg 
-          width="140" 
+          width="30" 
           height={cordHeight}
           className="overflow-visible"
           style={{ 
-            filter: isLightOn ? `drop-shadow(0 0 8px hsl(var(--primary)))` : 'none',
+            filter: isLightOn ? `drop-shadow(0 0 6px hsl(var(--primary)))` : 'none',
             transition: 'filter 0.5s ease'
           }}
         >
           <defs>
             <linearGradient id="ropeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="transparent" />
-              <stop offset="10%" stopColor={isLightOn ? "hsl(262, 83%, 58%)" : "hsl(0, 0%, 55%)"} stopOpacity="0.5" />
-              <stop offset="100%" stopColor={isLightOn ? "hsl(262, 83%, 58%)" : "hsl(0, 0%, 65%)"} />
+              <stop offset="15%" stopColor={isLightOn ? "hsl(262, 83%, 58%)" : "hsl(0, 0%, 50%)"} stopOpacity="0.6" />
+              <stop offset="100%" stopColor={isLightOn ? "hsl(262, 83%, 58%)" : "hsl(0, 0%, 60%)"} />
             </linearGradient>
           </defs>
           <path 
-            d={generateFluidPath()}
+            d={generateWavyPath()}
             fill="none"
             stroke="url(#ropeGradient)"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            style={{ 
-              transition: isDragging.current ? 'none' : 'd 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
-            }}
           />
         </svg>
         
-        {/* Pull handle - follows drag position */}
+        {/* Pull handle */}
         <div 
-          className="absolute cursor-grab active:cursor-grabbing pointer-events-auto"
+          className="absolute cursor-grab active:cursor-grabbing"
           style={{ 
-            left: `${20 + dragPos.x}px`, 
+            left: `${15 + dragPos.x - 10}px`, 
             top: `${160 + dragPos.y - 10}px`,
-            transition: isDragging.current ? 'none' : 'left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
+            transition: isDragging.current ? 'none' : 'left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
           }}
           onMouseDown={handleDragStart}
           onTouchStart={handleDragStart}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => !isDragging.current && setIsHovering(false)}
         >
           {/* Glow */}
           <div 
-            className="absolute rounded-full blur-lg transition-all duration-500"
+            className="absolute inset-0 rounded-full blur-lg transition-all duration-500"
             style={{
               width: '24px',
               height: '24px',
@@ -234,21 +237,20 @@ const Hero = () => {
           />
           {/* Handle ball */}
           <div 
-            className="w-5 h-5 rounded-full transition-all duration-300"
+            className="w-5 h-5 rounded-full transition-all duration-300 hover:scale-125"
             style={{
               background: isLightOn 
                 ? `radial-gradient(circle at 30% 30%, hsl(262, 83%, 70%), hsl(262, 83%, 50%))` 
-                : `radial-gradient(circle at 30% 30%, hsl(0, 0%, 75%), hsl(0, 0%, 50%))`,
+                : `radial-gradient(circle at 30% 30%, hsl(0, 0%, 70%), hsl(0, 0%, 45%))`,
               boxShadow: isLightOn 
                 ? `0 0 15px hsl(var(--primary)), 0 2px 4px rgba(0,0,0,0.3)` 
                 : `0 2px 4px rgba(0,0,0,0.3)`,
-              transform: isHovering ? 'scale(1.2)' : 'scale(1)',
             }}
           />
           {/* Hint */}
           <span 
             className="absolute left-1/2 -translate-x-1/2 mt-2 text-[10px] text-muted-foreground/60 whitespace-nowrap transition-opacity duration-300"
-            style={{ opacity: dragPos.y > 10 || dragPos.x !== 0 ? 0 : 1 }}
+            style={{ opacity: dragPos.y > 10 || Math.abs(dragPos.x) > 5 ? 0 : 1 }}
           >
             puxa ↓
           </span>
