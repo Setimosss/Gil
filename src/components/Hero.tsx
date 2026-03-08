@@ -107,7 +107,7 @@ const Hero = () => {
     `;
   };
 
-  const lightIntensity = isLightOn ? 0.65 : 0;
+  const lightIntensity = isLightOn ? 0.72 : 0;
   const cordHeight = 200 + dragPos.y;
 
   return (
