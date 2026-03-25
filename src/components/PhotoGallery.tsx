@@ -36,9 +36,9 @@ const PhotoGallery = () => {
       category: "Design"
     },
     {
-      title: "Nails",
-      image: naos,
-      category: "Beleza"
+      title: "Jéssica Portugal",
+      image: jessicaPortugal,
+      category: "Música"
     }
   ];
 
