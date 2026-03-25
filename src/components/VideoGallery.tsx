@@ -9,7 +9,7 @@ const VideoGallery = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [playingVideos, setPlayingVideos] = useState<Set<number>>(new Set());
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const pauseTimerRefs = useRef<Map<number, NodeJS.Timeout>>(new Map());
+  const pauseTimerRefs = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
 
   const resetVideo = (index: number) => {
     const video = videoRefs.current[index];

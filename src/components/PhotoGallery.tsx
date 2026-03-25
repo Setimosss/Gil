@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import toppestStalt from "@/assets/toppest-stalt.jpeg";
 import eComoE from "@/assets/e-como-e.jpeg";
 import amiKenha from "@/assets/ami-kenha.jpeg";
