@@ -1,10 +1,10 @@
 import { useState } from "react";
-import kenpoImage from "@/assets/kenpo.jpg";
+import toppestStalt from "@/assets/toppest-stalt.jpeg";
 import eComoE from "@/assets/e-como-e.jpeg";
 import amiKenha from "@/assets/ami-kenha.jpeg";
 import alb3 from "@/assets/alb3.jpg";
 import joao from "@/assets/joao.jpg";
-import naos from "@/assets/naos.jpg";
+import jessicaPortugal from "@/assets/jessica-portugal.jpeg";
 
 const PhotoGallery = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
