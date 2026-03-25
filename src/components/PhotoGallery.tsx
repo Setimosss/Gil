@@ -11,9 +11,9 @@ const PhotoGallery = () => {
 
   const photos = [
     {
-      title: "Kempo",
-      image: kenpoImage,
-      category: "Desporto"
+      title: "Toppest x Stalt",
+      image: toppestStalt,
+      category: "Música"
     },
     {
       title: "É Como É",
