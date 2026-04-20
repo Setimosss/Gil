@@ -33,7 +33,7 @@ const Footer = () => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-lg">Contacto</h4>
+            <h4 className="font-bold text-lg">Contactos</h4>
             <div className="flex flex-col space-y-3">
               <a 
                 href="tel:+351935442979"

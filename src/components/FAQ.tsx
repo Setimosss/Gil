@@ -16,7 +16,7 @@ const FAQ = () => {
       answer: "Trabalhamos de forma colaborativa e estratégica, focando nas necessidades e objetivos de cada cliente. O nosso processo passa pela pesquisa, criatividade e planeamento, garantindo soluções personalizadas e impactantes. Da conceção à execução, acompanhamos cada etapa com rigor, sempre com o objetivo de superar expectativas e criar resultados duradouros, mantendo o contacto com o cliente ao longo do projeto."
     },
     {
-      question: "Porque escolher-nos?",
+      question: "Porquê escolher-nos?",
       answer: "Transformamos a sua visão em algo inesquecível. Com criatividade, propósito, profissionalismo e paixão, deixamos uma marca verdadeira e duradoura no mundo. Juntos, vamos além da simples criação, vamos impactar e deixar uma boa marca no mundo!"
     },
     {
@@ -34,7 +34,7 @@ const FAQ = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="section-header text-center space-y-4 mb-16">
           <h2 className="text-5xl md:text-6xl font-bold font-heading">
-            Perguntas <span className="text-gradient">Frequentes</span>
+            Perguntas <span className="text-gradient">frequentes</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Tire suas dúvidas sobre nossos serviços e processos

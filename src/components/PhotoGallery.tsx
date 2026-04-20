@@ -48,7 +48,7 @@ const PhotoGallery = () => {
       <div className="container mx-auto px-4">
         <div className="section-header text-center space-y-4 mb-16">
           <h2 className="text-5xl md:text-6xl font-bold font-heading">
-            A Nossa <span className="text-gradient">Galeria</span>
+            A nossa <span className="text-gradient">galeria</span>
           </h2>
         </div>
 

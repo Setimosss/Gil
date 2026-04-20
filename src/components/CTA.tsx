@@ -15,7 +15,7 @@ const CTA = () => {
             <h2 className="text-5xl md:text-7xl font-bold font-heading leading-tight">
               Pronto para começar?{" "}
               <span className="block mt-2 text-gradient">
-                Agende uma reunião
+                Agenda uma reunião
               </span>
             </h2>
           </ScrollReveal>
