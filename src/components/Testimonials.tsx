@@ -26,7 +26,7 @@ const Testimonials = () => {
       <div className="container mx-auto px-4">
         <div className="section-header text-center space-y-4 mb-16">
           <h2 className="text-5xl md:text-6xl font-bold font-heading">
-            O Que Dizem <span className="text-gradient">Nossos Clientes</span>
+            O que dizem os <span className="text-gradient">nossos clientes</span>
           </h2>
         </div>
 
