@@ -49,7 +49,7 @@ const Services = () => {
       <div className="container mx-auto px-4">
         <div className="section-header text-left space-y-4 mb-16">
           <h2 className="text-5xl md:text-6xl font-bold font-heading">
-            os nossos <span className="text-gradient">serviços</span>
+            Os nossos <span className="text-gradient">serviços</span>
           </h2>
         </div>
 
