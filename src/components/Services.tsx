@@ -2,7 +2,7 @@ const Services = () => {
   const services = [
     {
       emoji: "📈",
-      title: "Marketing",
+      title: "Marketing Digital",
       items: [
         "Consultadoria estratégica",
         "Marketing de lançamentos musicais",
